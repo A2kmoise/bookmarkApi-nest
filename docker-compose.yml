@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  dev-db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "moi@se"
+      POSTGRES_DB: "nest"
+    networks:
+      - rcacourse
+
+networks:
+  rcacourse:
