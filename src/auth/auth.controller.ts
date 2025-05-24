@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 
 @Controller('auth')
 export class AuthController{
+
 constructor( private authservice : AuthService ){}
 
    @Post('signup')
@@ -12,6 +13,5 @@ constructor( private authservice : AuthService ){}
   @Post('signin')
     signin() {
         return this.authservice.login();
-    } 
-    
+    }    
 }
