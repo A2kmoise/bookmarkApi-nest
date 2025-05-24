@@ -13,7 +13,7 @@ model User {
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email    String @unique
+  email   String @unique
   password String
 
   firstName String?
