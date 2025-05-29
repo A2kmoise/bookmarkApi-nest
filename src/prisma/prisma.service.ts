@@ -13,5 +13,9 @@ export class PrismaService extends PrismaClient {
       },
     });
   }
+  cleanDb(){
+    this.bookmark.deleteMany();
+    this.user.deleteMany();
+  }
 }
  
