@@ -1,4 +1,8 @@
-import { Delete, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  Delete,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
@@ -10,7 +14,11 @@ import { access } from 'fs';
 
 @Injectable({})
 export class AuthService {
-  constructor(private Prisma: PrismaService, private jwt: JwtService, private config: ConfigService) { }
+  constructor(
+    private Prisma: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+  ) {}
 
   async signup(dto: AuthDto) {
     const hash = await argon.hash(dto.password);
@@ -27,37 +35,37 @@ export class AuthService {
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError)
         if (error.code === 'P2002') {
-          throw new ForbiddenException(
-            'Credentials taken',
-          );
+          throw new ForbiddenException('Credentials taken');
         }
     }
-    throw error
+    throw error;
   }
 
   async login(dto: AuthDto) {
     const user = await this.Prisma.user.findUnique({
       where: {
         email: dto.email,
-      }
+      },
     });
 
-    if (!user) throw new ForbiddenException('Credentials incorrect',);
+    if (!user) throw new ForbiddenException('Credentials incorrect');
 
-    const pwMatches = await argon.verify(user.password, dto.password)
+    const pwMatches = await argon.verify(user.password, dto.password);
 
-    if (!pwMatches) throw new ForbiddenException('Credentials incorrect');
-
+    if (!pwMatches)
+      throw new ForbiddenException('Credentials incorrect');
 
     return this.signToken(user.id, user.email);
   }
 
-  async signToken(userId: number, email: String): Promise<{ access_token: string }> {
-
+  async signToken(
+    userId: number,
+    email: String,
+  ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       email,
-    }
+    };
     const Secret = this.config.get('JWT_SECRET');
 
     const token = await this.jwt.signAsync(payload, {
@@ -66,7 +74,6 @@ export class AuthService {
     });
     return {
       access_token: token,
-    }
-
+    };
   }
 }
